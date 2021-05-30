@@ -1,6 +1,7 @@
 class nyc_params:
     len_recent_time = 5
     number_region = 64
+    grid = 10
     threshold_nc = "threshold_nc.npy"
     label = 'label.npy'
     all_data = 'data_nyc.npy'
@@ -16,6 +17,7 @@ class nyc_params:
 class chicago_params:
     len_recent_time = 5
     number_region = 27
+    grid = 6
     threshold_nc = "threshold_nc.npy"
     label = 'label.npy'
     all_data = 'data_chicago.npy'
