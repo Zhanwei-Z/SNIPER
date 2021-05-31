@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras.layers import Layer
-
+import math
 
 class Evolution(Layer):
 
@@ -27,7 +27,7 @@ class Evolution(Layer):
             all_data_dynamic_now = tf.sigmoid(
                 tf.matmul(tf.concat([all_data_dynamic_now, all_data_static[i]], axis=-1), self.w1)
                 * tf.repeat(threshold_nc[i], self.dr2, axis=-1) + all_data_dynamic_now
-                * tf.repeat(1 - threshold_nc[i], self.dr2, axis=-1))
+                * tf.repeat(1 - threshold_nc[i], self.dr2, axis=-1)) * math.exp(-1/2)
             all_data_dynamic_now_diff = all_data_dynamic_now - all_data_dynamic_now_diff
             all_data_dynamic_diff.append(tf.expand_dims(all_data_dynamic_now_diff, 0))
             all_data_dynamic = tf.concat([all_data_dynamic, tf.expand_dims(all_data_dynamic_now, 0)], axis=0)
