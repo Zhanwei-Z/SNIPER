@@ -3,6 +3,7 @@ import tensorflow.keras as keras
 from tensorflow.keras.layers import Layer
 import math
 
+
 class Evolution(Layer):
 
     def __init__(self, dr2, **kwargs):
@@ -19,16 +20,17 @@ class Evolution(Layer):
 
     def call(self, all_data_static, threshold_nc, all_data_dynamic_now):
         all_data_dynamic = tf.expand_dims(all_data_dynamic_now, 0)
-        all_data_dynamic_now=tf.sigmoid(tf.matmul(tf.concat([all_data_dynamic_now,all_data_static[0]],axis=-1),self.w1)\
-                                        *tf.repeat(thre_nc[0],self.dr2,axis=-1)+all_data_dynamic_now\
-                                        *tf.repeat(1-thre_nc[0],self.dr2,axis=-1)) * math.exp(-1/2)
+        all_data_dynamic_now = tf.sigmoid(
+            tf.matmul(tf.concat([all_data_dynamic_now, all_data_static[0]], axis=-1), self.w1)
+            * tf.repeat(threshold_nc[0], self.dr2, axis=-1) + all_data_dynamic_now
+            * tf.repeat(1 - threshold_nc[0], self.dr2, axis=-1)) * math.exp(-1 / 2)
         all_data_dynamic_diff = []
         for i in range(1, len(threshold_nc)):
             all_data_dynamic_now_diff = all_data_dynamic_now
             all_data_dynamic_now = tf.sigmoid(
                 tf.matmul(tf.concat([all_data_dynamic_now, all_data_static[i]], axis=-1), self.w1)
                 * tf.repeat(threshold_nc[i], self.dr2, axis=-1) + all_data_dynamic_now
-                * tf.repeat(1 - threshold_nc[i], self.dr2, axis=-1)) * math.exp(-1/2)
+                * tf.repeat(1 - threshold_nc[i], self.dr2, axis=-1)) * math.exp(-1 / 2)
             all_data_dynamic_now_diff = all_data_dynamic_now - all_data_dynamic_now_diff
             all_data_dynamic_diff.append(tf.expand_dims(all_data_dynamic_now_diff, 0))
             all_data_dynamic = tf.concat([all_data_dynamic, tf.expand_dims(all_data_dynamic_now, 0)], axis=0)
